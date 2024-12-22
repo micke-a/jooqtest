@@ -1,0 +1,50 @@
+###
+GET http://localhost:8080/hello
+
+###
+GET http://localhost:8080/author/list
+
+###
+GET http://localhost:8080/author/{{lastAuthorId}}
+
+###
+DELETE http://localhost:8080/author/{{lastAuthorId}}
+
+
+### Just an Author no books
+POST http://localhost:8080/author/
+Content-Type: application/json
+
+{
+  "firstName": "Name {{$random.alphabetic(10)}}",
+  "lastName": "Last {{$random.alphabetic(10)}}",
+  "dateOfBirth": "1947-08-24",
+  "yearOfBirth": 1947,
+  "address": "{{$random.integer(1,100)}} Somewhere"
+
+}
+
+> {%
+ client.global.set("lastAuthorId", response.body.id);
+ client.log(`stored ${response.body.id} in lastAuthorId variable`);
+ %}
+
+### Author with books
+POST http://localhost:8080/author/
+Content-Type: application/json
+
+{
+  "firstName": "Name {{$random.alphabetic(10)}}",
+  "lastName": "Last {{$random.alphabetic(10)}}",
+  "dateOfBirth": "1947-08-24",
+  "yearOfBirth": 1947,
+  "address": "{{$random.integer(1, 100)}} Somewhere",
+  "books": [
+    {
+      "title": "Fancy title {{$random.alphabetic(10)}}"
+    },
+    {
+      "title": "Another title {{$random.alphabetic(10)}}"
+    }
+  ]
+}
